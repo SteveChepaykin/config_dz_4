@@ -18,7 +18,7 @@ def assemble(inputname):
         for line in f:
             process_line(line.strip())
     write_binary()
-    # write_log()
+    write_log()
 
 def process_line(line):
     parts = line.split()
@@ -52,8 +52,19 @@ def write_binary():
         for instruction in instructions:
             out.write(instruction)
 
-def execute_instructions():
+def write_log():
     root = ET.Element("Log")
+    for idx, instruction in enumerate(instructions):
+        cmd = ET.SubElement(root, "Instruction")
+        cmd.set("index", str(idx))
+        cmd.set("instr", str(instruction))
+        cmd.text = instruction.hex()
+    tree = ET.ElementTree(root)
+    tree.write("log.xml")
+    
+
+def execute_instructions():
+    root = ET.Element("Out")
     for idx, instr in enumerate(instructions):
         ii = int.from_bytes(instr, byteorder='little')
         a = ii & 15
@@ -61,21 +72,27 @@ def execute_instructions():
         b = ii & 7
         ii = ii >> 3
         c = ii
+        innertext = ""
         if a == 0:
             registers[b] = c
+            innertext = f"loaded {c} in register by adress {b}"
         if a == 14:
             registers[c] = memory[registers[b]]
+            innertext = f"loaded info from memory by adress described in register {b} into register by adress {c}"
         if a == 10:
             memory[registers[c]] = registers[b]
+            innertext = f"loaded info from register {b} into memory cell described in register {c}"
         if a == 4:
             memory[registers[c]] = -memory[registers[b]]
+            innertext = f"loaded unary minus result: {-memory[registers[b]]} into memory cell described in register {c}"
         
-        cmd = ET.SubElement(root, "Instruction")
+        cmd = ET.SubElement(root, str(a))
         cmd.set("index", str(idx))
-        cmd.set("instr", str(instr))
-        cmd.text = instr.hex()
+        cmd.set("adress", str(b))
+        cmd.set("operand", str(c))
+        cmd.text = innertext
     tree = ET.ElementTree(root)
-    tree.write("log.xml")
+    tree.write("out.xml")
 
 
 if __name__ == "__main__":

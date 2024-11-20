@@ -16,11 +16,12 @@ class TestMethods(unittest.TestCase):
     def test_assembly(self):
         assemble("test.txt")
         self.assertTrue(p.isfile("binary.txt"))
+        self.assertTrue(p.isfile("log.xml"))
 
     def test_interpretation(self):
         if(p.isfile("binary.txt")):
             execute_instructions()
-            self.assertTrue(p.isfile("log.xml"))
+            self.assertTrue(p.isfile("out.xml"))
 
 if __name__ == '__main__':
     unittest.main(argv=['first-arg-is-ignored'], exit=False)
