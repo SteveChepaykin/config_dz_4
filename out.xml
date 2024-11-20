@@ -1,6 +1,0 @@
-<Out>
-<0 index="0" adress="7" operand="555">loaded 555 in register by adress 7</0>
-<10 index="1" adress="2" operand="424">loaded info from register 2 into memory cell described in register 424</10>
-<14 index="2" adress="6" operand="1">loaded info from memory by adress described in register 6 into register by adress 1</14>
-<4 index="3" adress="0" operand="61">loaded unary minus result: 0 into memory cell described in register 61</4>
-</Out>
